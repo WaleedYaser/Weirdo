@@ -1,9 +1,11 @@
 #pragma once
 
+#include "engine/Exports.h"
+
 #include <windows.h>
 #include <stdint.h>
 
-namespace os
+namespace engine::os
 {
 	struct Color
 	{
@@ -20,18 +22,18 @@ namespace os
 		int height;
 	};
 
-	Bitmap
+	ENGINE_EXPORT Bitmap
 	bitmap_new(int width, int height);
 
-	void
+	ENGINE_EXPORT void
 	bitmap_free(Bitmap &self, int width, int height);
 
-	void
+	ENGINE_EXPORT void
 	bitmap_resize(Bitmap &self, int width, int height);
 
-	void
+	ENGINE_EXPORT void
 	bitmap_fill(Bitmap &self, const Color &color);
 
-	void
+	ENGINE_EXPORT void
 	bitmap_set(Bitmap &self, int x, int y, const Color &color);
 }

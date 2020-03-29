@@ -1,10 +1,11 @@
 #pragma once
 
-#include "os\Bitmap.h"
+#include "engine/Exports.h"
+#include "engine/os/Bitmap.h"
 
 #include <windows.h>
 
-namespace os
+namespace engine::os
 {
 	struct Message
 	{
@@ -18,15 +19,15 @@ namespace os
 		HWND hwnd;
 	};
 
-	Window
+	ENGINE_EXPORT Window
 	window_create();
 
-	void
+	ENGINE_EXPORT void
 	window_destroy(Window &self);
 
-	Message
+	ENGINE_EXPORT Message
 	window_message(Window &self);
 
-	void
+	ENGINE_EXPORT void
 	window_fill(Window &self, const Bitmap &bitmap);
 }

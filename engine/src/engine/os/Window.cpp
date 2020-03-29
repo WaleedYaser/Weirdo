@@ -1,10 +1,11 @@
 // TODO(Waleed): implement assert
 
-#include "os\Window.h"
+#include "engine/os/Window.h"
+
 #include <assert.h>
 #include <stdint.h>
 
-namespace os
+namespace engine::os
 {
 	LRESULT CALLBACK
 	_main_window_procedure(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)

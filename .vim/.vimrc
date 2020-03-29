@@ -49,4 +49,4 @@ set splitright
 set makeprg=build.bat
 
 " key mapping
-nnoremap <F7> :silent make<CR>:copen<CR>
+nnoremap <F7> :silent make<CR>:copen 25<CR>

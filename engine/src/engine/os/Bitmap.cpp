@@ -1,6 +1,6 @@
-#include "os\Bitmap.h"
+#include "engine/os/Bitmap.h"
 
-namespace os
+namespace engine::os
 {
 	Bitmap
 	bitmap_new(int width, int height)
