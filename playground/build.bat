@@ -1,4 +1,4 @@
-REM @echo off
+@echo off
 
 set PROJECT_NAME=playground
 set PROJECT_DIR=%~dp0
