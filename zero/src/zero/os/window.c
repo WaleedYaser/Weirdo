@@ -1,12 +1,12 @@
 
-#include "kuro/os/window.h"
+#include "zero/os/window.h"
 
 // TODO(Waleed): implement assert
 #include <assert.h>
 #include <stdint.h>
 
 LRESULT CALLBACK
-_kuro_os_main_window_procedure(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
+_zero_os_main_window_procedure(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
 	switch(umsg)
 	{
@@ -18,15 +18,15 @@ _kuro_os_main_window_procedure(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lpara
 }
 
 static WNDCLASSEX
-_kuro_os_window_class(void)
+_zero_os_window_class(void)
 {
 	static WNDCLASSEX wcx;
 
 	wcx.cbSize = sizeof(WNDCLASSEX);
 	wcx.style  = CS_OWNDC | CS_VREDRAW | CS_HREDRAW;
-	wcx.lpfnWndProc = _kuro_os_main_window_procedure;
+	wcx.lpfnWndProc = _zero_os_main_window_procedure;
 	wcx.hInstance = GetModuleHandle(NULL);
-	wcx.lpszClassName = "kuro_os_window_class";
+	wcx.lpszClassName = "zero_os_window_class";
 
 	ATOM res = RegisterClassEx(&wcx);
 	assert(res && "RegisterClassEX failed");
@@ -36,14 +36,14 @@ _kuro_os_window_class(void)
 
 // API
 
-kuro_os_window_t
-kuro_os_window_create(void)
+zero_os_window_t
+zero_os_window_create(void)
 {
-	WNDCLASSEX wcx = _kuro_os_window_class();
+	WNDCLASSEX wcx = _zero_os_window_class();
 	HWND hwnd = CreateWindowEx(
 		0,
 		wcx.lpszClassName,
-		"kuro",
+		"zero",
 		WS_OVERLAPPEDWINDOW | WS_VISIBLE,
 		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
 		0,
@@ -52,20 +52,20 @@ kuro_os_window_create(void)
 		0);
 
 	assert(hwnd && "CreateWindowEx failed");
-	return (kuro_os_window_t) {.hwnd = hwnd};
+	return (zero_os_window_t) {.hwnd = hwnd};
 }
 
 void
-kuro_os_window_destroy(kuro_os_window_t self)
+zero_os_window_destroy(zero_os_window_t self)
 {
 	BOOL res = DestroyWindow(self.hwnd);
 	assert(res && "DestroyWindow failed");
 }
 
-kuro_os_window_message_t
-kuro_os_window_message(kuro_os_window_t self)
+zero_os_window_message_t
+zero_os_window_message(zero_os_window_t self)
 {
-	kuro_os_window_message_t res = {0};
+	zero_os_window_message_t res = {0};
 
 	MSG msg;
 	while (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
@@ -86,7 +86,7 @@ kuro_os_window_message(kuro_os_window_t self)
 }
 
 void
-kuro_os_window_fill(kuro_os_window_t self, const kuro_os_bitmap_t *bitmap)
+zero_os_window_fill(zero_os_window_t self, const zero_os_bitmap_t *bitmap)
 {
 	HDC hdc = GetDC(self.hwnd);
 

@@ -1,9 +1,9 @@
-#include "kuro/os/bitmap.h"
+#include "zero/os/bitmap.h"
 
-kuro_os_bitmap_t
-kuro_os_bitmap_new(int width, int height)
+zero_os_bitmap_t
+zero_os_bitmap_new(int width, int height)
 {
-	kuro_os_bitmap_t self = {0};
+	zero_os_bitmap_t self = {0};
 
 	self.data = (uint32_t *)VirtualAlloc(
 		0,
@@ -25,13 +25,13 @@ kuro_os_bitmap_new(int width, int height)
 }
 
 void
-kuro_os_bitmap_free(kuro_os_bitmap_t *self)
+zero_os_bitmap_free(zero_os_bitmap_t *self)
 {
 	VirtualFree(self->data, 0, MEM_RELEASE);
 }
 
 void
-kuro_os_bitmap_resize(kuro_os_bitmap_t *self, int width, int height)
+zero_os_bitmap_resize(zero_os_bitmap_t *self, int width, int height)
 {
 	VirtualFree(self->data, 0, MEM_RELEASE);
 	self->data = (uint32_t *)VirtualAlloc(
@@ -48,7 +48,7 @@ kuro_os_bitmap_resize(kuro_os_bitmap_t *self, int width, int height)
 }
 
 void
-kuro_os_bitmap_fill(kuro_os_bitmap_t *self, kuro_os_color_t color)
+zero_os_bitmap_fill(zero_os_bitmap_t *self, zero_os_color_t color)
 {
 	for (int i = 0; i < self->width * self->height; ++i)
 	{
@@ -57,7 +57,7 @@ kuro_os_bitmap_fill(kuro_os_bitmap_t *self, kuro_os_color_t color)
 }
 
 void
-kuro_os_bitmap_set(kuro_os_bitmap_t *self, int x, int y, kuro_os_color_t color)
+zero_os_bitmap_set(zero_os_bitmap_t *self, int x, int y, zero_os_color_t color)
 {
 	self->data[x + y * self->width] = (color.r << 16) | (color.g << 8) | (color.b << 0);
 }

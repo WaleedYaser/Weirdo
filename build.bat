@@ -9,7 +9,7 @@ set OUTPUT_DIR=%PROJECT_DIR%build\
 REM cleanup
 rmdir /S /Q %OUTPUT_DIR%
 
-call "%PROJECT_DIR%kuro\build.bat"
+call "%PROJECT_DIR%zero\build.bat"
 call "%PROJECT_DIR%playground\build.bat"
 
 ENDLOCAL
