@@ -1,5 +1,7 @@
 @echo off
 
+SETLOCAL
+
 set PROJECT_NAME=engine
 set PROJECT_DIR=%~dp0
 set OUTPUT_DIR=%PROJECT_DIR%..\build\
@@ -37,3 +39,5 @@ pushd %OUTPUT_DIR%
 cl %COMPILE_OPTIONS% %SOURCE_FILES% /I %INCLUDE_DIRS% /link %LINK_OPTIONS% %LIBS%
 
 popd %OUTPUT_DIR%
+
+ENDLOCAL
