@@ -1,4 +1,7 @@
 #include "zero/os/window.h"
+#include "zero/os/timer.h"
+
+#include <stdio.h>
 
 inline static void
 _render_gradient(zero_os_bitmap_t *bitmap, int x_offset, int y_offset)
@@ -24,6 +27,8 @@ main()
 
 	int x_offset = 0;
 	int y_offset = 0;
+
+	zero_os_timer_t timer = zero_os_timer_start();
 	while (true)
 	{
 		zero_os_window_message_t msg = zero_os_window_message(window);
@@ -39,7 +44,16 @@ main()
 		x_offset += 10;
 		y_offset += 10;
 
-		Sleep(5);
+		zero_os_microseconds_t frame_time = zero_os_timer_end(timer);
+		zero_os_timer_sleep(50 - uint32_t(frame_time.ms / 1000));
+
+		// TODO(Waleed): doesn't work correctly
+		frame_time = zero_os_timer_end(timer);
+		char buffer[256];
+		sprintf_s(buffer, sizeof(buffer), "ms: %.2fms/f\n", frame_time.ms / 1000.0f);
+		OutputDebugString(buffer);
+
+		timer = zero_os_timer_start();
 	}
 	return 0;
 }
