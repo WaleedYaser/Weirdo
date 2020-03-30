@@ -1,8 +1,6 @@
 #ifndef ZERO_OS_BITMAP_H
 #define ZERO_OS_BITMAP_H
 
-#pragma comment(lib, "Gdi32.lib")
-
 #include "zero/export.h"
 
 #include <windows.h>

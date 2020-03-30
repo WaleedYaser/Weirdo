@@ -1,8 +1,6 @@
 #ifndef ZERO_OS_WINDOW_H
 #define ZERO_OS_WINDOW_H
 
-#pragma comment(lib, "User32.lib")
-
 #include "zero/export.h"
 #include "zero/os/bitmap.h"
 
