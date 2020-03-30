@@ -2,16 +2,16 @@
 
 SETLOCAL
 
-set PROJECT_NAME=playground
+set PROJECT_NAME=kuro
 set PROJECT_DIR=%~dp0
 set OUTPUT_DIR=%PROJECT_DIR%..\build\
 
 set INCLUDE_DIRS=^
-	%PROJECT_DIR%\..\zero\include\
+	%PROJECT_DIR%include\
 
-set LIBS=zero.lib
+set LIBS=User32.lib Gdi32.lib
 
-set SOURCE_FILES=%PROJECT_DIR%src\main.cpp
+set SOURCE_FILES= %PROJECT_DIR%src\build.cpp
 
 REM /MT  => compiles to create a multhreaded executable file using LIBCMT.lib
 REM /nologo => Suppresses display of sign-on banner
@@ -27,7 +27,7 @@ REM /Z7  => generates C 7.0-compativle debuggin information.
 REM /Zi  => debuging information
 REM /Fe: => name executable file
 REM /Fm: => create a map file
-set COMPILE_OPTIONS=/MT /nologo /GR- /EHa- /Od /Oi /WX /W4 /wd4201 /wd4100 /wd4109 /FC /Z7 /Fe: %PROJECT_NAME% /Fm: %PROJECT_NAMR%.map /std:c++17 /D_cplusplus
+set COMPILE_OPTIONS=/MT /nologo /GR- /EHa- /Od /Oi /WX /W4 /wd4201 /wd4204 /wd4100 /wd4109 /FC /Z7 /Fe: %PROJECT_NAME% /Fm: %PROJECT_NAMR%.map /LD /TC
 
 REM /incremental =>
 REM /opt		 =>
