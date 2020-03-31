@@ -3,36 +3,44 @@
 
 #include <stdio.h>
 
-#define RESET   "\033[0m"
-#define RED     "\033[31m"      /* Red */
-#define GREEN   "\033[32m"      /* Green */
-
 inline static void
-_render_gradient(zero_os_bitmap_t *bitmap, int x_offset, int y_offset)
+_render_triangle(zero_os_bitmap_t *bitmap)
 {
-	float t1[2] = {float(bitmap->width) / 2.0f, 0.0f};
-	float t2[2] = {0.0f, float(bitmap->height)};
-	float t3[2] = {float(bitmap->width), float(bitmap->height)};
+	float t1[2] = { 0.0f,  0.5f}; float c1[3] = {255.0f, 0.0f, 0.0f};
+	float t2[2] = {-0.5f, -0.5f}; float c2[3] = {0.0f, 255.0f, 0.0f};
+	float t3[2] = { 0.5f, -0.5f}; float c3[3] = {0.0f, 0.0f, 255.0f};
 
-	for (int x = 0; x < bitmap->width; ++x)
+	int width = bitmap->width;
+	int height = bitmap->height;
+
+	float e1[2] = {t2[0] - t1[0], t2[1] - t1[1]};
+	float e2[2] = {t3[0] - t2[0], t3[1] - t2[1]};
+	float a = e1[0] * e2[1] - e1[1] * e2[0];
+
+	for (int i = 0; i < width; ++i)
 	{
-		for (int y = 0; y < bitmap->height; ++y)
+		for (int j = 0; j < height; ++j)
 		{
-			float v1[2] = {t1[0] - x, t1[1] - y};
-			float v2[2] = {t2[1] - x, t2[1] - y};
-			float v3[2] = {t3[2] - x, t3[1] - y};
+			float x = float(2 * i - width) / float(width);
+			float y = float(2 * j - height) / float(height);
 
-			bool b1 = ((v1[0] * v2[1] - v1[1] * v2[0]) >= 0.0f);
-			bool b2 = ((v2[0] * v3[1] - v2[1] * v3[0]) >= 0.0f);
-			bool b3 = ((v3[0] * v1[1] - v3[1] * v1[0]) >= 0.0f);
+			float v1[2] = {t1[0] - x, t1[1] - y};
+			float v2[2] = {t2[0] - x, t2[1] - y};
+			float v3[2] = {t3[0] - x, t3[1] - y};
+
+			float a1 = (v2[0] * v3[1] - v2[1] * v3[0]) / a;
+			float a2 = (v3[0] * v1[1] - v3[1] * v1[0]) / a;
+			float a3 = (v1[0] * v2[1] - v1[1] * v2[0]) / a;
 
 			zero_os_color_t color;
-			if (b1 && b2 && b3)
-				color = zero_os_color_t{255, 0, 0};
-			else
-				color = zero_os_color_t{};
-
-			bitmap->data[x + y * bitmap->width] = (color.r << 16) | (color.g << 8) | (color.b << 0);
+			if ((a1 >= 0.0f) && (a2 >= 0.0f) && (a3 >= 0.0f))
+			{
+				uint8_t r = uint8_t(a1 * c1[0] + a2 * c2[0] + a3 * c3[0]);
+				uint8_t g = uint8_t(a1 * c1[1] + a2 * c2[1] + a3 * c3[1]);
+				uint8_t b = uint8_t(a1 * c1[2] + a2 * c2[2] + a3 * c3[2]);
+				color = zero_os_color_t{r, g, b};
+				bitmap->data[i + j * bitmap->width] = (color.r << 16) | (color.g << 8) | (color.b << 0);
+			}
 		}
 	}
 }
@@ -40,12 +48,13 @@ _render_gradient(zero_os_bitmap_t *bitmap, int x_offset, int y_offset)
 int
 main()
 {
+	uint8_t target_fps = 30;
+	float target_frame_ms = 1000.0f / float(target_fps);
+
 	zero_os_window_t window = zero_os_window_create();
 	zero_os_bitmap_t bitmap = zero_os_bitmap_new(1280, 720);
 
-	int x_offset = 0;
-	int y_offset = 0;
-
+	zero_os_timer_period(1);
 	zero_os_timer_t timer = zero_os_timer_start();
 	while (true)
 	{
@@ -56,22 +65,19 @@ main()
 		if (msg.window_width != bitmap.width || msg.window_height != bitmap.height)
 			zero_os_bitmap_resize(&bitmap, msg.window_width, msg.window_height);
 
-		_render_gradient(&bitmap, x_offset, y_offset);
+		zero_os_bitmap_fill(&bitmap, zero_os_color_t{});
+		_render_triangle(&bitmap);
 		zero_os_window_fill(window, &bitmap);
 
-		x_offset += 10;
-		y_offset += 10;
-
 		zero_os_microseconds_t frame_time = zero_os_timer_end(timer);
-		if (frame_time.ms / 1000 < 30)
-			zero_os_timer_sleep(uint32_t(30.0f - frame_time.ms / 1000.0f));
+		float busy_frame_ms = float(frame_time.ms) / 1000.0f;
+		if (busy_frame_ms < target_frame_ms)
+		{
+			zero_os_timer_sleep(uint32_t(target_frame_ms - busy_frame_ms));
+		}
 
-		// TODO(Waleed): doesn't work correctly
-		frame_time = zero_os_timer_end(timer);
-		printf("ms: %.2fms/f\n", frame_time.ms / 1000.0f);
-	//	char buffer[256];
-	// 	sprintf_s(buffer, sizeof(buffer), "ms: %.2fms/f\n", frame_time.ms / 1000.0f);
-	//	OutputDebugString(buffer);
+		float frame_ms = zero_os_timer_end(timer).ms / 1000.0f;
+		printf("busy frame ms: %0.4f ms, frame ms: %0.4f ms\n", busy_frame_ms, frame_ms);
 
 		timer = zero_os_timer_start();
 	}

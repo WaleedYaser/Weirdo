@@ -22,6 +22,13 @@ zero_os_timer_end(zero_os_timer_t self)
 }
 
 void
+zero_os_timer_period(uint32_t period)
+{
+	MMRESULT res = timeBeginPeriod(period);
+	assert(res == TIMERR_NOERROR);
+}
+
+void
 zero_os_timer_sleep(uint32_t milliseconds)
 {
 	Sleep(milliseconds);

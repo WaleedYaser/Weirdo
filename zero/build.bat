@@ -9,7 +9,7 @@ set OUTPUT_DIR=%PROJECT_DIR%..\build\
 set INCLUDE_DIRS=^
 	%PROJECT_DIR%include\
 
-set LIBS=User32.lib Gdi32.lib
+set LIBS=User32.lib Gdi32.lib Winmm.lib
 
 set SOURCE_FILES= %PROJECT_DIR%src\build.c
 
