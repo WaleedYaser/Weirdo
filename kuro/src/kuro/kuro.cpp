@@ -14,6 +14,8 @@ kuro_render(zero_os_bitmap_t *bitmap)
 	float e2[2] = {t3[0] - t2[0], t3[1] - t2[1]};
 	float a = e1[0] * e2[1] - e1[1] * e2[0];
 
+	zero_os_bitmap_fill(bitmap, zero_os_color_t{30, 30, 30});
+
 	for (int j = 0; j < height; ++j)
 	{
 		for (int i = 0; i < width; ++i)

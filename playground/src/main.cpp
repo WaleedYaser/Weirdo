@@ -68,7 +68,6 @@ main()
 		if (msg.window_width != bitmap.width || msg.window_height != bitmap.height)
 			zero_os_bitmap_resize(&bitmap, msg.window_width, msg.window_height);
 
-		zero_os_bitmap_fill(&bitmap, zero_os_color_t{});
 		kuro_render_from_dll(&bitmap);
 		zero_os_window_fill(window, &bitmap);
 

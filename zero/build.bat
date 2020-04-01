@@ -6,8 +6,7 @@ set PROJECT_NAME=zero
 set PROJECT_DIR=%~dp0
 set OUTPUT_DIR=%PROJECT_DIR%..\build\
 
-set INCLUDE_DIRS=^
-	%PROJECT_DIR%include\
+set INCLUDE_DIRS=/I%PROJECT_DIR%include\
 
 set LIBS=User32.lib Gdi32.lib Winmm.lib
 
@@ -36,7 +35,7 @@ set LINK_OPTIONS=/incremental:no /opt:ref
 mkdir %OUTPUT_DIR%
 pushd %OUTPUT_DIR%
 
-cl %COMPILE_OPTIONS% %SOURCE_FILES% /I %INCLUDE_DIRS% /link %LINK_OPTIONS% %LIBS%
+cl %COMPILE_OPTIONS% %SOURCE_FILES% %INCLUDE_DIRS% /link %LINK_OPTIONS% %LIBS%
 
 popd %OUTPUT_DIR%
 

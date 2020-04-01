@@ -6,9 +6,8 @@ set PROJECT_NAME=kuro
 set PROJECT_DIR=%~dp0
 set OUTPUT_DIR=%PROJECT_DIR%..\build\
 
-set INCLUDE_DIRS=^
-	/I %PROJECT_DIR%include\^
-	/I %PROJECT_DIR%..\zero\include^
+REM TODO(Waleed): find a way for doing list in windows batch files
+set INCLUDE_DIRS=/I %PROJECT_DIR%include\ /I %PROJECT_DIR%..\zero\include
 
 set LIBS=zero.lib
 
