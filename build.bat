@@ -7,7 +7,7 @@ set PROJECT_DIR=%~dp0
 set OUTPUT_DIR=%PROJECT_DIR%build\
 
 REM cleanup
-rmdir /S /Q %OUTPUT_DIR%
+REM rmdir /S /Q %OUTPUT_DIR%
 
 call "%PROJECT_DIR%zero\build.bat"
 call "%PROJECT_DIR%kuro\build.bat"

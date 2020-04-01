@@ -45,8 +45,8 @@ set nowrap
 " new splits open in right
 set splitright
 
-" build
-set makeprg=build.bat
-
 " key mapping
-nnoremap <F7> :silent make<CR>:copen 25<CR>
+	" build
+nnoremap <F7> :wa<CR>:set makeprg=build.bat<CR>:silent make<CR>:copen 20<CR>
+	"hot reloading kuro
+nnoremap <F6> :wa<CR>:set makeprg=kuro\build.bat<CR>:silent make<CR>

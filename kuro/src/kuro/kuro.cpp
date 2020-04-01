@@ -3,7 +3,7 @@
 void
 kuro_render(zero_os_bitmap_t *bitmap)
 {
-	float t1[2] = { 0.0f,  0.5f}; float c1[3] = {255.0f, 255.0f, 0.0f};
+	float t1[2] = { 0.0f,  0.5f}; float c1[3] = {255.0f, 255.0f, 255.0f};
 	float t2[2] = {-0.5f, -0.5f}; float c2[3] = {0.0f, 255.0f, 255.0f};
 	float t3[2] = { 0.5f, -0.5f}; float c3[3] = {255.0f, 0.0f, 255.0f};
 
