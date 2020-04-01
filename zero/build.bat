@@ -32,7 +32,7 @@ REM /incremental =>
 REM /opt		 =>
 set LINK_OPTIONS=/incremental:no /opt:ref
 
-mkdir %OUTPUT_DIR%
+if not exist %OUTPUT_DIR% mkdir %OUTPUT_DIR%
 pushd %OUTPUT_DIR%
 
 cl %COMPILE_OPTIONS% %SOURCE_FILES% %INCLUDE_DIRS% /link %LINK_OPTIONS% %LIBS%
