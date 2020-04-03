@@ -64,29 +64,13 @@ zero_os_window_destroy(zero_os_window_t self)
 void
 zero_os_window_message(zero_os_window_t self, zero_window_msg_t *window_msg)
 {
-	window_msg->input.key_w.count = 0;
-	window_msg->input.key_w.up = false;
-	window_msg->input.key_w.down = false;
-
-	window_msg->input.key_s.count = 0;
-	window_msg->input.key_s.up = false;
-	window_msg->input.key_s.down = false;
-
-	window_msg->input.key_a.count = 0;
-	window_msg->input.key_a.up = false;
-	window_msg->input.key_a.down = false;
-
-	window_msg->input.key_d.count = 0;
-	window_msg->input.key_d.up = false;
-	window_msg->input.key_d.down = false;
-
-	window_msg->input.key_space.count = 0;
-	window_msg->input.key_space.up = false;
-	window_msg->input.key_space.down = false;
-
-	window_msg->input.key_escape.count = 0;
-	window_msg->input.key_escape.up = false;
-	window_msg->input.key_escape.down = false;
+	// TODO(Waleed): don't use magic numbers
+	for (int i = 0; i < 6; ++i)
+	{
+		window_msg->input.keys[i].count = 0;
+		window_msg->input.keys[i].up    = false;
+		window_msg->input.keys[i].down  = false;
+	}
 
 	MSG msg;
 	while (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
