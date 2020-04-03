@@ -175,21 +175,32 @@ void
 kuro_frame(zero_os_bitmap_t *bitmap, zero_window_msg_t *msg)
 {
 	static vec2 player_pos = {0};
+	static vec3 player_color = vec3{100.0f, 200.0f, 50.0f};
 	vec2 player_vel = {0};
 
-	if (msg->input.key_d)
+	if (msg->input.key_space.down)
+	{
+		player_color = vec3{100.0f, 200.0f, 200.0f};
+	}
+
+	if (msg->input.key_space.up)
+	{
+		player_color = vec3{255.0f, 255.0f, 255.0f};
+	}
+
+	if (msg->input.key_d.is_down)
 	{
 		player_vel.x += 10.0f;
 	}
-	if (msg->input.key_a)
+	if (msg->input.key_a.is_down)
 	{
 		player_vel.x -= 10.0f;
 	}
-	if (msg->input.key_w)
+	if (msg->input.key_w.is_down)
 	{
 		player_vel.y += 10.0f;
 	}
-	if (msg->input.key_s)
+	if (msg->input.key_s.is_down)
 	{
 		player_vel.y -= 10.0f;
 	}
@@ -228,6 +239,6 @@ kuro_frame(zero_os_bitmap_t *bitmap, zero_window_msg_t *msg)
 	circle_t p = {
 		player_pos,	// center
 		20.0f,	   // radius
-		vec3{100.0f, 200.0f, 50.0f}}; // color
+		player_color}; // color
 	_kuro_raster_circle(bitmap, p);
 }

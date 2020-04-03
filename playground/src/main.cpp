@@ -79,7 +79,7 @@ main()
 			zero_os_timer_sleep(uint32_t(target_frame_ms - busy_frame_ms));
 		}
 
-		if (msg.input.key_space)
+		if (msg.input.key_space.is_down)
 		{
 			float frame_ms = zero_os_timer_end(timer).ms / 1000.0f;
 			printf("busy frame ms: %0.4f ms, frame ms: %0.4f ms\n", busy_frame_ms, frame_ms);
