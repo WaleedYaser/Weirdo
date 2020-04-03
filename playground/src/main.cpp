@@ -39,8 +39,8 @@ _load_kuro_dll()
 	kuro_dll = LoadLibrary("kuro_tmp.dll");
 	assert(kuro_dll && "failed to load kuro.dll");
 
-	kuro_render_from_dll = (kuro_render_proc_t) GetProcAddress(kuro_dll, "kuro_render");
-	assert(kuro_render_from_dll && "failed to load kuro_render_from_dll function");
+	ex_kuro_frame = (kuro_frame_proc_t) GetProcAddress(kuro_dll, "kuro_frame");
+	assert(ex_kuro_frame && "failed to load kuro_render_from_dll function");
 
 	last_time = ftwrite;
 }
@@ -57,18 +57,19 @@ main()
 
 	zero_os_timer_period(1);
 	zero_os_timer_t timer = zero_os_timer_start();
+	zero_window_msg_t msg = {0};
 	while (true)
 	{
 		_load_kuro_dll();
 
-		zero_os_window_message_t msg = zero_os_window_message(window);
+		zero_os_window_message(window, &msg);
 		if (msg.quit)
 			break;
 
 		if (msg.window_width != bitmap.width || msg.window_height != bitmap.height)
 			zero_os_bitmap_resize(&bitmap, msg.window_width, msg.window_height);
 
-		kuro_render_from_dll(&bitmap);
+		ex_kuro_frame(&bitmap, &msg);
 		zero_os_window_fill(window, &bitmap);
 
 		zero_os_microseconds_t frame_time = zero_os_timer_end(timer);
@@ -78,8 +79,11 @@ main()
 			zero_os_timer_sleep(uint32_t(target_frame_ms - busy_frame_ms));
 		}
 
-		float frame_ms = zero_os_timer_end(timer).ms / 1000.0f;
-		printf("busy frame ms: %0.4f ms, frame ms: %0.4f ms\n", busy_frame_ms, frame_ms);
+		if (msg.input.key_space)
+		{
+			float frame_ms = zero_os_timer_end(timer).ms / 1000.0f;
+			printf("busy frame ms: %0.4f ms, frame ms: %0.4f ms\n", busy_frame_ms, frame_ms);
+		}
 
 		timer = zero_os_timer_start();
 	}

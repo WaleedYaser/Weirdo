@@ -1,4 +1,3 @@
-
 #include "zero/os/window.h"
 
 // TODO(Waleed): implement assert
@@ -62,27 +61,89 @@ zero_os_window_destroy(zero_os_window_t self)
 	assert(res && "DestroyWindow failed");
 }
 
-zero_os_window_message_t
-zero_os_window_message(zero_os_window_t self)
+void
+zero_os_window_message(zero_os_window_t self, zero_window_msg_t *window_msg)
 {
-	zero_os_window_message_t res = {0};
-
 	MSG msg;
 	while (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
 	{
-		if (msg.message == WM_QUIT)
-			res.quit = true;
 		TranslateMessage(&msg);
+
+		switch (msg.message)
+		{
+			case WM_QUIT:
+				window_msg->quit = true;
+				break;
+			case WM_SYSKEYUP:
+			case WM_KEYUP:
+			{
+				switch (msg.wParam)
+				{
+					case 'W':
+						window_msg->input.key_w = false;
+						break;
+					case 'S':
+						window_msg->input.key_s = false;
+						break;
+					case 'A':
+						window_msg->input.key_a = false;
+						break;
+					case 'D':
+						window_msg->input.key_d = false;
+						break;
+					case VK_SPACE:
+						window_msg->input.key_space = false;
+						break;
+					case VK_ESCAPE:
+						window_msg->input.key_escape = false;
+						break;
+				}
+			} break;
+
+			case WM_SYSKEYDOWN:
+			case WM_KEYDOWN:
+			{
+				switch (msg.wParam)
+				{
+					case 'W':
+						window_msg->input.key_w = true;
+						break;
+					case 'S':
+						window_msg->input.key_s = true;
+						break;
+					case 'A':
+						window_msg->input.key_a = true;
+						break;
+					case 'D':
+						window_msg->input.key_d = true;
+						break;
+					case VK_SPACE:
+						window_msg->input.key_space = true;
+						break;
+					case VK_ESCAPE:
+						window_msg->input.key_escape = true;
+						break;
+				}
+			} break;
+		}
+
 		DispatchMessage(&msg);
 	}
 
-	// Get window width and height
+	// get window width and height
 	RECT rcClient;
 	GetClientRect(self.hwnd, &rcClient);
-	res.window_width  = rcClient.right - rcClient.left;
-	res.window_height = rcClient.bottom - rcClient.top;
+	window_msg->window_width  = rcClient.right - rcClient.left;
+	window_msg->window_height = rcClient.bottom - rcClient.top;
 
-	return res;
+	// get mouse postition
+	POINT point;
+	BOOL err = GetCursorPos(&point);
+	assert(err && "GetCursorPosition failed");
+	err = ScreenToClient(self.hwnd, &point);
+	assert(err && "ScreenToClient failed");
+	window_msg->input.mouse_x = point.x;
+	window_msg->input.mouse_y = point.y;
 }
 
 void
