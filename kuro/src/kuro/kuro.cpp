@@ -171,74 +171,64 @@ _kuro_raster_circle(zero_os_bitmap_t *bitmap, circle_t c)
 	}
 }
 
+#define PI 3.14159265359f
+
 void
 kuro_frame(zero_os_bitmap_t *bitmap, zero_window_msg_t *msg)
 {
-	static vec2 player_pos = {0};
-	static vec3 player_color = vec3{100.0f, 200.0f, 50.0f};
-	vec2 player_vel = {0};
+	// source: http://buildnewgames.com/gamephysics/
+	static float x = 0.0f;
+	static float y = 200.0f;
+	static float vy = 0.0f;
+	static float ay = 0.0f;
+	static float m = 0.1f;
+	static float r = 20.0f;
+	static float dt = 1.0f / 30.0f;
+	static float e = -0.5f;
+	static float rho = 1.2f;
+	static float c_d = 0.47f;
+	static float A = PI * r * r / 10000.0f;
+	static float ground_y = -50.0f;
 
-	if (msg->input.key_space.down)
-	{
-		player_color = vec3{100.0f, 200.0f, 200.0f};
-	}
+	float fy = 0.0f;
 
-	if (msg->input.key_space.up)
-	{
-		player_color = vec3{255.0f, 255.0f, 255.0f};
-	}
+	fy -= m * 9.81f;
+	fy += -1.0f * 0.5f * rho * c_d * A * vy * vy;
 
-	if (msg->input.key_d.is_down)
-	{
-		player_vel.x += 10.0f;
-	}
-	if (msg->input.key_a.is_down)
-	{
-		player_vel.x -= 10.0f;
-	}
-	if (msg->input.key_w.is_down)
-	{
-		player_vel.y += 10.0f;
-	}
-	if (msg->input.key_s.is_down)
-	{
-		player_vel.y -= 10.0f;
-	}
+	float dy = vy * dt + (0.5f * ay * dt * dt);
+	y += dy * 100.0f;
 
-	player_pos.x += player_vel.x;
-	player_pos.y += player_vel.y;
+	float new_ay = fy / m;
+	float avg_ay = 0.5f * (new_ay + ay);
+	vy += avg_ay * dt;
+
+	if (y - r < ground_y && vy < 0.0f)
+	{
+		vy *= e;
+		y = ground_y + r;
+	}
 
 	zero_os_bitmap_fill(bitmap, zero_os_color_t{30, 30, 30});
 
-	triangle_t t = {
-		vec2{   0.0f,  100.0f}, // p1
-		vec2{-100.0f, -100.0f}, // p2
-		vec2{ 100.0f, -100.0f}, // p3
-		vec3{255.0f, 255.0f, 255.0f},  // c1
-		vec3{  0.0f, 255.0f, 255.0f},  // c2
-		vec3{255.0f,   0.0f, 255.0f}}; // c3
+	vec2 tl = vec2{-bitmap->width / 2.0f, -50.0f};
+	vec2 tr = vec2{bitmap->width / 2.0f, -50.0f};
+	vec2 bl = vec2{-bitmap->width / 2.0f, -bitmap->height / 2.0f};
+	vec2 br = vec2{bitmap->width / 2.0f, -bitmap->height / 2.0f};
 
-	// mouse to frame
-	vec2 mouse_pos = vec2{(float)msg->input.mouse_x, (float)msg->input.mouse_y};
-	if (mouse_pos.x < 0.0f) mouse_pos.x = 0.0f;
-	if (mouse_pos.y < 0.0f) mouse_pos.y = 0.0f;
-	if (mouse_pos.x + 1 > msg->window_width) mouse_pos.x = (float)msg->window_width - 1.0f;
-	if (mouse_pos.y + 1 > msg->window_height) mouse_pos.y = (float)msg->window_height - 1.0f;
 
-	mouse_pos.x = mouse_pos.x - bitmap->width / 2.0f;
-	mouse_pos.y = bitmap->height / 2.0f - mouse_pos.y;
+	vec3 ct = {0.0f, 200.0f, 100.0f};
+	vec3 cb = {0.0f, 200.0f, 100.0f};
 
-	circle_t c = {
-		mouse_pos,	// center
-		20.0f,	   // radius
-		vec3{200.0f, 100.0f, 50.0f}}; // color
+	_kuro_raster_triangle(bitmap, triangle_t{
+		tl, tr, br,
+		ct, ct, cb});
 
-	_kuro_raster_triangle(bitmap, t);
-	_kuro_raster_circle(bitmap, c);
+	_kuro_raster_triangle(bitmap, triangle_t{
+		tl, br, bl,
+		ct, cb, cb});
 
-	circle_t p = {
-		player_pos,	// center
-		20.0f,	   // radius
-		player_color}; // color
-	_kuro_raster_circle(bitmap, p);
+	_kuro_raster_circle(bitmap, circle_t{
+		vec2{x, y}, r, vec3{200.0f, 50.0f, 100.0f}});
+
+
 }
