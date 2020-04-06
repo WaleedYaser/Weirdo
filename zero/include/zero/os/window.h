@@ -23,4 +23,7 @@ zero_os_window_message(zero_os_window_t self, zero_window_msg_t *window_msg);
 ZERO_API void
 zero_os_window_fill(zero_os_window_t self, const zero_os_bitmap_t *bitmap);
 
+ZERO_API int
+zero_os_window_refresh_rate(zero_os_window_t self);
+
 #endif /* ZERO_OS_WINDOW_H */

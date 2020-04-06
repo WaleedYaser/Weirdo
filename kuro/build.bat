@@ -24,14 +24,13 @@ REM /W4  => sets output warning level
 REM /wd  => disable specified warning
 REM /FC  => use full pathname in diagnostics
 REM /Z7  => generates C 7.0-compativle debuggin information.
-REM /Zi  => debuging information
 REM /Fe: => name executable file
 REM /Fm: => create a map file
-set COMPILE_OPTIONS=/MT /nologo /GR- /EHa- /Od /Oi /WX /W4 /wd4201 /wd4204 /wd4100 /wd4109 /FC /Z7 /Fe: %PROJECT_NAME% /Fm: %PROJECT_NAMR%.map /LD
+set COMPILE_OPTIONS=/MTd /nologo /GR- /EHa- /Od /Oi /WX /W4 /wd4201 /wd4204 /wd4100 /wd4109 /FC /Z7 /Fe: %PROJECT_NAME% /Fm: %PROJECT_NAMR%.map /LD
 
 REM /incremental =>
 REM /opt		 =>
-set LINK_OPTIONS=/incremental:no /opt:ref
+set LINK_OPTIONS=/incremental:no /opt:ref /PDB:%PROJECT_NAME%_%random%.pdb
 
 if not exist %OUTPUT_DIR% mkdir %OUTPUT_DIR%
 pushd %OUTPUT_DIR%

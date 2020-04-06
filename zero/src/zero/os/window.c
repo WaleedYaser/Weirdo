@@ -165,9 +165,15 @@ zero_os_window_message(zero_os_window_t self, zero_window_msg_t *window_msg)
 	// get mouse postition
 	POINT point;
 	BOOL err = GetCursorPos(&point);
-	assert(err && "GetCursorPosition failed");
+	if (err)
+	{
+		// do something
+	}
 	err = ScreenToClient(self.hwnd, &point);
-	assert(err && "ScreenToClient failed");
+	if (err)
+	{
+		// do something
+	}
 	window_msg->input.mouse_x = point.x;
 	window_msg->input.mouse_y = point.y;
 }
@@ -191,4 +197,13 @@ zero_os_window_fill(zero_os_window_t self, const zero_os_bitmap_t *bitmap)
 		&(bitmap->bmi),
 		DIB_RGB_COLORS,
 		SRCCOPY);
+}
+
+int
+zero_os_window_refresh_rate(zero_os_window_t self)
+{
+	HDC hdc = GetDC(self.hwnd);
+	int res = GetDeviceCaps(hdc, VREFRESH);
+	assert(res > 1 && "GetDeviceCaps failed");
+	return res;
 }
