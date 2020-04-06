@@ -24,7 +24,7 @@ set tabstop=4
 " colors
 let &runtimepath.=','.getcwd().'\.vim'
 syntax on
-colorscheme monotone
+colorscheme nord
 set termguicolors
 
 " make backspace work like most other programs
@@ -50,3 +50,10 @@ set splitright
 nnoremap <F7> :wa<CR>:set makeprg=build.bat<CR>:silent make<CR>:copen 20<CR>
 	"hot reloading kuro
 nnoremap <F6> :wa<CR>:set makeprg=kuro\build.bat<CR>:silent make<CR>
+
+" Explorer
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+let g:netrw_browse_split = 4
+let g:netrw_altv = 1
+let g:netrw_winsize = 25
