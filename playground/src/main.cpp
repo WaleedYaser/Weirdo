@@ -75,6 +75,7 @@ main()
 
 	zero_os_timer_period(1);
 	zero_os_timer_t timer = zero_os_timer_start();
+	float delta_time = 0.0f;
 
 	zero_window_msg_t msg = {0};
 	while (true)
@@ -88,7 +89,7 @@ main()
 		if (msg.window_width != bitmap.width || msg.window_height != bitmap.height)
 			zero_os_bitmap_resize(&bitmap, msg.window_width, msg.window_height);
 
-		ex_kuro_frame(&bitmap, &msg);
+		ex_kuro_frame(&bitmap, &msg, delta_time);
 		zero_os_window_fill(window, &bitmap);
 
 		zero_os_microseconds_t frame_time = zero_os_timer_end(timer);
@@ -98,9 +99,10 @@ main()
 			zero_os_timer_sleep(uint32_t(target_frame_ms - busy_frame_ms));
 		}
 
+		float frame_ms = zero_os_timer_end(timer).ms / 1000.0f;
+		delta_time = frame_ms / 1000.0f;
 		if (msg.input.key_space.is_down)
 		{
-			float frame_ms = zero_os_timer_end(timer).ms / 1000.0f;
 			printf("busy frame ms: %0.4f ms, frame ms: %0.4f ms\n", busy_frame_ms, frame_ms);
 		}
 

@@ -174,26 +174,46 @@ _kuro_raster_circle(zero_os_bitmap_t *bitmap, circle_t c)
 #define PI 3.14159265359f
 
 void
-kuro_frame(zero_os_bitmap_t *bitmap, zero_window_msg_t *msg)
+kuro_frame(zero_os_bitmap_t *bitmap, zero_window_msg_t *msg, float dt)
 {
 	// source: http://buildnewgames.com/gamephysics/
 	static float x = 0.0f;
 	static float y = 200.0f;
-	static float vy = 0.0f;
-	static float ay = 0.0f;
-	static float m = 0.1f;
-	static float r = 20.0f;
-	static float dt = 1.0f / 30.0f;
-	static float e = -0.5f;
-	static float rho = 1.2f;
-	static float c_d = 0.47f;
-	static float A = PI * r * r / 10000.0f;
-	static float ground_y = -50.0f;
 
-	float fy = 0.0f;
+	static float vy = 0.0f; // y velocity
+	static float ay = 0.0f; // y acceleration
 
+	static float m = 0.1f;	// mass in kg
+	static float r = 20.0f;	// radius in cm
+
+	static float e = -0.5f;		// coef of bouncing
+	static float rho = 1.2f;	// density of air
+	static float c_d = 0.47f;	// coef of drag
+	static float A = PI * r * r * 10000.0f;	// frontal area of the ball
+
+	static float ground_y = 30.0f - (float)bitmap->height / 2.0f;
+
+	float fy = 0.0f;	// force
+
+	if (msg->input.key_w.down && ((y - r) == ground_y))
+	{
+		fy = 20.0f;
+	}
+
+	if (msg->input.key_d.is_down)
+	{
+		x += dt * 150.0f;
+	}
+
+	if (msg->input.key_a.is_down)
+	{
+		x -= dt * 150.0f;
+	}
+
+	// gravity
 	fy -= m * 9.81f;
-	fy += -1.0f * 0.5f * rho * c_d * A * vy * vy;
+	// air resistance force
+	// fy += 1.0f * 0.5f * rho * c_d * A * vy * vy;
 
 	float dy = vy * dt + (0.5f * ay * dt * dt);
 	y += dy * 100.0f;
@@ -202,16 +222,18 @@ kuro_frame(zero_os_bitmap_t *bitmap, zero_window_msg_t *msg)
 	float avg_ay = 0.5f * (new_ay + ay);
 	vy += avg_ay * dt;
 
-	if (y - r < ground_y && vy < 0.0f)
+	if (((y - r) < ground_y) && vy < 0.0f)
 	{
-		vy *= e;
+		// vy *= e;
 		y = ground_y + r;
+		vy = 0.0f;
+		ay = 0.0f;
 	}
 
 	zero_os_bitmap_fill(bitmap, zero_os_color_t{30, 30, 30});
 
-	vec2 tl = vec2{-bitmap->width / 2.0f, -50.0f};
-	vec2 tr = vec2{bitmap->width / 2.0f, -50.0f};
+	vec2 tl = vec2{-bitmap->width / 2.0f, ground_y};
+	vec2 tr = vec2{bitmap->width / 2.0f, ground_y};
 	vec2 bl = vec2{-bitmap->width / 2.0f, -bitmap->height / 2.0f};
 	vec2 br = vec2{bitmap->width / 2.0f, -bitmap->height / 2.0f};
 
