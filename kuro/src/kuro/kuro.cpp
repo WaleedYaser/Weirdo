@@ -33,7 +33,7 @@ kuro_frame(zero_os_bitmap_t *bitmap, zero_window_msg_t *msg, float dt)
 	static float c_d = 0.47f;	// coef of drag
 	static float A = PI * r * r * 10000.0f;	// frontal area of the ball
 
-	static float ground_y = 30.0f - (float)bitmap->height / 2.0f;
+	float ground_y = 50.0f - (float)bitmap->height / 2.0f;
 
 	float fy = 0.0f;	// force
 
