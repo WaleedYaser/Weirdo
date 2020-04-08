@@ -1,3 +1,5 @@
+" set runtime path
+set rtp+=~\.fzf
 " No annoying sound on errors
 set t_vb=
 set noerrorbells
@@ -22,7 +24,7 @@ set shiftwidth=4
 set tabstop=4
 
 " colors
-let &runtimepath.=','.getcwd().'\.vim'
+let &rtp.=','.getcwd().'\.vim'
 syntax on
 colorscheme nord
 set termguicolors
@@ -48,8 +50,10 @@ set splitright
 " key mapping
 	" build
 nnoremap <F7> :wa<CR>:set makeprg=build.bat<CR>:silent make<CR>:copen 20<CR>
-	"hot reloading kuro
+	" hot reloading kuro
 nnoremap <F6> :wa<CR>:set makeprg=kuro\build.bat<CR>:silent make<CR>
+	" fuzzy finder
+nnoremap <M-p> :FZF<CR>
 
 " Explorer
 let g:netrw_banner = 0

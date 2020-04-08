@@ -1,5 +1,6 @@
 #include "kuro/kuro.h"
 #include "kuro/raster.h"
+#include "kuro/rect.h"
 
 #define PI 3.14159265359f
 
@@ -85,4 +86,13 @@ kuro_frame(zero_os_bitmap_t *bitmap, zero_window_msg_t *msg, float dt)
 	kuro_raster_rect(bitmap, kuro_rect_t{
 		vec2{x - r, y - r}, vec2{x + r, y - r}, vec2{x + r, y + r}, vec2{x - r, y + r},
 		c_lime, c_lime, c_lime, c_lime});
+
+	static rect_t debug_rect = rect_new(vec2_t{}, 50.0f, 50.0f);
+	kuro_raster_rect(bitmap, kuro_rect_t{
+		vec2{debug_rect.tl.x, debug_rect.tl.y},
+		vec2{debug_rect.tr.x, debug_rect.tr.y},
+		vec2{debug_rect.br.x, debug_rect.br.y},
+		vec2{debug_rect.bl.x, debug_rect.bl.y},
+		c_brown, c_brown, c_brown, c_brown});
+	rect_rotate(debug_rect, dt);
 }
