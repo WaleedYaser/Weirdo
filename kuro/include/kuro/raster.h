@@ -35,6 +35,13 @@ struct kuro_rect_t
 	vec3 c1, c2, c3, c4;
 };
 
+struct kuro_line_t
+{
+	vec2 p1, p2;
+	float width;
+	vec3 c1, c2;
+};
+
 struct kuro_circle_t
 {
 	vec2 center;
@@ -47,6 +54,9 @@ kuro_raster_triangle(zero_os_bitmap_t *bitmap, kuro_triangle_t triangle);
 
 KURO_API void
 kuro_raster_rect(zero_os_bitmap_t *bitmap, kuro_rect_t rect);
+
+KURO_API void
+kuro_raster_line(zero_os_bitmap_t *bitmap, kuro_line_t line);
 
 KURO_API void
 kuro_raster_circle(zero_os_bitmap_t *bitmap, kuro_circle_t circle);

@@ -23,7 +23,7 @@ rect_new(vec2_t center, float width, float height, float mass = 1.0f)
 	self.bl = vec2_t{center.x - width / 2.0f, center.y + height / 2.0f};
 
 	self.m = mass;
-	self.j = mass * (width * width + height * height) / 12000;
+	self.j = mass * (width * width + height * height) / 12000.0f;
 
 	return self;
 }
@@ -45,6 +45,17 @@ rect_rotate(rect_t &self, float angle)
 	self.tr = rotate(self.tr, angle, center);
 	self.br = rotate(self.br, angle, center);
 	self.bl = rotate(self.bl, angle, center);
+
+	return self;
+}
+
+inline static rect_t&
+rect_move(rect_t &self, vec2_t offset)
+{
+	self.tl += offset;
+	self.tr += offset;
+	self.br += offset;
+	self.bl += offset;
 
 	return self;
 }

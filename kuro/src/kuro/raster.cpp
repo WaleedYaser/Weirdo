@@ -118,6 +118,24 @@ kuro_raster_rect(zero_os_bitmap_t *bitmap, kuro_rect_t rect)
 }
 
 void
+kuro_raster_line(zero_os_bitmap_t *bitmap, kuro_line_t line)
+{
+	vec2 d = vec2{line.p2.x - line.p1.x, line.p2.y - line.p1.y};
+	float lenght = sqrtf(d.x * d.x + d.y * d.y);
+	vec2 n = vec2{-d.y / lenght, d.x / lenght};
+
+	vec2 p1 = vec2{line.p1.x + line.width * n.x, line.p1.y + line.width * n.y};
+	vec2 p2 = vec2{line.p1.x - line.width * n.x, line.p1.y - line.width * n.y};
+	vec2 p3 = vec2{line.p2.x - line.width * n.x, line.p2.y - line.width * n.y};
+	vec2 p4 = vec2{line.p2.x + line.width * n.x, line.p2.y + line.width * n.y};
+
+	kuro_raster_triangle(bitmap, kuro_triangle_t{
+		p1, p2, p3, line.c1, line.c1, line.c2});
+	kuro_raster_triangle(bitmap, kuro_triangle_t{
+		p1, p3, p4, line.c1, line.c2, line.c2});
+}
+
+void
 kuro_raster_circle(zero_os_bitmap_t *bitmap, kuro_circle_t circle)
 {
 	aa_box_t circle_box = aa_box_t{
