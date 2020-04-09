@@ -41,10 +41,10 @@ rect_rotate(rect_t &self, float angle)
 	self.theta += angle;
 	vec2_t center = rect_center(self);
 
-	self.tl = rotate(self.tl, center, angle);
-	self.tr = rotate(self.tr, center, angle);
-	self.br = rotate(self.br, center, angle);
-	self.bl = rotate(self.bl, center, angle);
+	self.tl = rotate(self.tl, angle, center);
+	self.tr = rotate(self.tr, angle, center);
+	self.br = rotate(self.br, angle, center);
+	self.bl = rotate(self.bl, angle, center);
 
 	return self;
 }

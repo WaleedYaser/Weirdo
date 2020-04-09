@@ -89,9 +89,8 @@ cross(vec2_t a, vec2_t b)
 
 // rotate a around b with angle
 inline static vec2_t
-rotate(vec2_t a, vec2_t b, float angle)
+rotate(vec2_t a, float angle, vec2_t b = {0})
 {
-	// TODO(Waleed): Investigate more on this
 	vec2_t seg = a - b;
 	return vec2_t{
 		b.x + ((seg.x * cosf(angle)) - (seg.y * sinf(angle))),
