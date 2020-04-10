@@ -75,7 +75,7 @@ operator/=(vec2_t &a, float s)
 }
 
 inline static vec2_t
-min(vec2_t a, vec2_t b)
+vec2_min(vec2_t a, vec2_t b)
 {
 	vec2_t res;
 	res.x = a.x < b.x ? a.x : b.x;
@@ -84,7 +84,7 @@ min(vec2_t a, vec2_t b)
 }
 
 inline static vec2_t
-max(vec2_t a, vec2_t b)
+vec2_max(vec2_t a, vec2_t b)
 {
 	vec2_t res;
 	res.x = a.x > b.x ? a.x : b.x;
@@ -96,6 +96,24 @@ inline static float
 dot(vec2_t a, vec2_t b)
 {
 	return a.x * b.x + a.y * b.y;
+}
+
+inline static float
+lenght(vec2_t v)
+{
+	return sqrtf(dot(v, v));
+}
+
+inline static vec2_t
+normalize(vec2_t v)
+{
+	return v / lenght(v);
+}
+
+inline static vec2_t
+perpendicular(vec2_t v)
+{
+	return vec2_t{-v.y, v.x};
 }
 
 inline static float
