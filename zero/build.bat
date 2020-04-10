@@ -10,7 +10,7 @@ set INCLUDE_DIRS=/I%PROJECT_DIR%include\
 
 set LIBS=User32.lib Gdi32.lib Winmm.lib
 
-set SOURCE_FILES= %PROJECT_DIR%src\build.c
+set SOURCE_FILES= %PROJECT_DIR%src\build.cpp
 
 REM /MT  => compiles to create a multhreaded executable file using LIBCMT.lib
 REM /nologo => Suppresses display of sign-on banner
@@ -26,7 +26,7 @@ REM /Z7  => generates C 7.0-compativle debuggin information.
 REM /Zi  => debuging information
 REM /Fe: => name executable file
 REM /Fm: => create a map file
-set COMPILE_OPTIONS=/MTd /nologo /GR- /EHa- /Od /Oi /WX /W4 /wd4201 /wd4204 /wd4100 /wd4109 /FC /Z7 /Fe: %PROJECT_NAME% /Fm: %PROJECT_NAMR%.map /LD /TC
+set COMPILE_OPTIONS=/MTd /nologo /GR- /EHa- /Od /Oi /WX /W4 /wd4201 /wd4204 /wd4100 /wd4109 /FC /Z7 /Fe: %PROJECT_NAME% /Fm: %PROJECT_NAMR%.map /LD
 
 REM /incremental =>
 REM /opt		 =>

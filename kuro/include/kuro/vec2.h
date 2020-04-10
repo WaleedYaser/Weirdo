@@ -1,5 +1,4 @@
-#ifndef KURO_VEC2_H
-#define KURO_VEC2_H
+#pragma once
 
 #include <math.h>
 
@@ -114,5 +113,3 @@ rotate(vec2_t a, float angle, vec2_t b = {0})
 		b.x + ((seg.x * cosf(angle)) - (seg.y * sinf(angle))),
 		b.y + ((seg.x * sinf(angle)) + (seg.y * cosf(angle)))};
 }
-
-#endif

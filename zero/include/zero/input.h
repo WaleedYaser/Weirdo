@@ -1,18 +1,17 @@
-#ifndef ZERO_INPUT_H
-#define ZERO_INPUT_H
+#pragma once
 
 #include <stdbool.h>
 #include <stdint.h>
 
-typedef struct _zero_input_key
+struct zero_input_key_t
 {
 	bool up;
 	bool down;
 	bool is_down;
 	uint8_t count;
-} zero_input_key_t;
+};
 
-typedef struct _zero_input
+struct zero_input_t
 {
 	int mouse_x;
 	int mouse_y;
@@ -31,6 +30,4 @@ typedef struct _zero_input
 			zero_input_key_t key_escape;
 		};
 	};
-} zero_input_t;
-
-#endif
+};

@@ -33,8 +33,6 @@ _zero_os_window_class(void)
 	return wcx;
 }
 
-// API
-
 zero_os_window_t
 zero_os_window_create(void)
 {
@@ -51,7 +49,7 @@ zero_os_window_create(void)
 		0);
 
 	assert(hwnd && "CreateWindowEx failed");
-	return (zero_os_window_t){hwnd};
+	return zero_os_window_t{hwnd};
 }
 
 void

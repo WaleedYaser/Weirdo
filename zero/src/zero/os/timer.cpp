@@ -7,7 +7,7 @@ zero_os_timer_start(void)
 {
 	LARGE_INTEGER ticks;
 	QueryPerformanceCounter(&ticks);
-	return (zero_os_timer_t) {.ticks = ticks.QuadPart};
+	return zero_os_timer_t{(uint64_t)ticks.QuadPart};
 }
 
 zero_os_microseconds_t
@@ -17,8 +17,8 @@ zero_os_timer_end(zero_os_timer_t self)
 	LARGE_INTEGER end_ticks;
 	QueryPerformanceFrequency(&frequency);
 	QueryPerformanceCounter(&end_ticks);
-	return (zero_os_microseconds_t) {
-		.ms = ((end_ticks.QuadPart - self.ticks) * 1000000) / frequency.QuadPart};
+	return zero_os_microseconds_t {
+		((end_ticks.QuadPart - self.ticks) * 1000000) / frequency.QuadPart};
 }
 
 void

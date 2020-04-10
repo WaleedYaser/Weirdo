@@ -1,5 +1,4 @@
-#ifndef ZERO_OS_WINDOW_H
-#define ZERO_OS_WINDOW_H
+#pragma once
 
 #include "zero/export.h"
 #include "zero/window_msg.h"
@@ -7,9 +6,10 @@
 
 #include <windows.h>
 
-typedef struct _zero_os_window {
+struct zero_os_window_t
+{
 	HWND hwnd;
-} zero_os_window_t;
+};
 
 ZERO_API zero_os_window_t
 zero_os_window_create(void);
@@ -25,5 +25,3 @@ zero_os_window_fill(zero_os_window_t self, const zero_os_bitmap_t *bitmap);
 
 ZERO_API int
 zero_os_window_refresh_rate(zero_os_window_t self);
-
-#endif /* ZERO_OS_WINDOW_H */
