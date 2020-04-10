@@ -75,6 +75,24 @@ operator/=(vec2_t &a, float s)
 	return a;
 }
 
+inline static vec2_t
+min(vec2_t a, vec2_t b)
+{
+	vec2_t res;
+	res.x = a.x < b.x ? a.x : b.x;
+	res.y = a.y < b.y ? a.y : b.y;
+	return res;
+}
+
+inline static vec2_t
+max(vec2_t a, vec2_t b)
+{
+	vec2_t res;
+	res.x = a.x > b.x ? a.x : b.x;
+	res.y = a.y > b.y ? a.y : b.y;
+	return res;
+}
+
 inline static float
 dot(vec2_t a, vec2_t b)
 {

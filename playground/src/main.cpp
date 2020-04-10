@@ -28,8 +28,7 @@ _set_current_dir_to_proc_dir()
 inline static void
 _load_kuro_dll()
 {
-	HANDLE hfile = CreateFile("kuro.dll", GENERIC_READ, FILE_SHARE_READ, NULL,
-        OPEN_EXISTING, 0, NULL);
+	HANDLE hfile = CreateFile("kuro.dll", GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
 	assert(hfile && "can't open kuro.dll");
 
 	FILETIME ftwrite;
@@ -87,7 +86,10 @@ main()
 			break;
 
 		if (msg.window_width != bitmap.width || msg.window_height != bitmap.height)
-			zero_os_bitmap_resize(&bitmap, msg.window_width, msg.window_height);
+		{
+			zero_os_bitmap_free(&bitmap);
+			bitmap = zero_os_bitmap_new(msg.window_width, msg.window_height);
+		}
 
 		ex_kuro_frame(&bitmap, &msg, delta_time);
 		zero_os_window_fill(window, &bitmap);
@@ -101,10 +103,7 @@ main()
 
 		float frame_ms = zero_os_timer_end(timer).ms / 1000.0f;
 		delta_time = frame_ms / 1000.0f;
-		if (msg.input.key_space.is_down)
-		{
-			printf("busy frame ms: %0.4f ms, frame ms: %0.4f ms\n", busy_frame_ms, frame_ms);
-		}
+		printf("busy frame ms: %0.4f ms, frame ms: %0.4f ms\n", busy_frame_ms, frame_ms);
 
 		timer = zero_os_timer_start();
 	}

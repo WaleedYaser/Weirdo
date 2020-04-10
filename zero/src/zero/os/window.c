@@ -51,7 +51,7 @@ zero_os_window_create(void)
 		0);
 
 	assert(hwnd && "CreateWindowEx failed");
-	return (zero_os_window_t) {.hwnd = hwnd};
+	return (zero_os_window_t){hwnd};
 }
 
 void

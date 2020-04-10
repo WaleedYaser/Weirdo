@@ -5,9 +5,9 @@ zero_os_bitmap_new(int width, int height)
 {
 	zero_os_bitmap_t self = {0};
 
-	self.data = (uint32_t *)VirtualAlloc(
+	self.data = (DWORD *)VirtualAlloc(
 		0,
-		4 * width * height,
+		sizeof(DWORD) * width * height,
 		MEM_RESERVE | MEM_COMMIT,
 		PAGE_READWRITE);
 
@@ -31,33 +31,16 @@ zero_os_bitmap_free(zero_os_bitmap_t *self)
 }
 
 void
-zero_os_bitmap_resize(zero_os_bitmap_t *self, int width, int height)
+zero_os_bitmap_fill(zero_os_bitmap_t *self, zero_color_t color)
 {
-	VirtualFree(self->data, 0, MEM_RELEASE);
-	self->data = (uint32_t *)VirtualAlloc(
-		0,
-		4 * width * height,
-		MEM_RESERVE | MEM_COMMIT,
-		PAGE_READWRITE);
+	DWORD raw = 
+		((uint8_t)color.a) << 24 |
+		((uint8_t)color.r) << 16 |
+		((uint8_t)color.g) <<  8 |
+		((uint8_t)color.b) <<  0 ;
 
-	self->bmi.bmiHeader.biWidth  = width;
-	self->bmi.bmiHeader.biHeight = height;
-
-	self->width  = width;
-	self->height = height;
-}
-
-void
-zero_os_bitmap_fill(zero_os_bitmap_t *self, zero_os_color_t color)
-{
 	for (int i = 0; i < self->width * self->height; ++i)
 	{
-		self->data[i] = (color.r << 16) | (color.g << 8) | (color.b << 0);
+		self->data[i] = raw;
 	}
-}
-
-void
-zero_os_bitmap_set(zero_os_bitmap_t *self, int x, int y, zero_os_color_t color)
-{
-	self->data[x + y * self->width] = (color.r << 16) | (color.g << 8) | (color.b << 0);
 }
