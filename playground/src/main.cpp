@@ -64,13 +64,16 @@ _load_kuro_dll()
 int
 main()
 {
+	uint32_t width = 960;
+	uint32_t height = 540;
+	uint32_t target_fps = 30;
+
 	_set_current_dir_to_proc_dir();
 
-	zero_os_window_t window = zero_os_window_create();
-	int target_fps = 30;
+	zero_os_window_t window = zero_os_window_create(width, height);
 	float target_frame_ms = 1000.0f / (float)target_fps;
 
-	zero_os_bitmap_t bitmap = zero_os_bitmap_new(1280, 720);
+	zero_os_bitmap_t bitmap = zero_os_bitmap_new(width, height);
 
 	zero_os_timer_period(1);
 	zero_os_timer_t timer = zero_os_timer_start();
@@ -94,6 +97,7 @@ main()
 		ex_kuro_frame(&bitmap, &msg, delta_time);
 		zero_os_window_fill(window, &bitmap);
 
+		// TODO(Waleed): not accurate yet
 		zero_os_microseconds_t frame_time = zero_os_timer_end(timer);
 		float busy_frame_ms = (float)frame_time.ms / 1000.0f;
 		if (busy_frame_ms < target_frame_ms)
@@ -102,10 +106,12 @@ main()
 		}
 
 		float frame_ms = zero_os_timer_end(timer).ms / 1000.0f;
+		timer = zero_os_timer_start();
+
 		delta_time = frame_ms / 1000.0f;
 		printf("busy frame ms: %0.4f ms, frame ms: %0.4f ms\n", busy_frame_ms, frame_ms);
-
-		timer = zero_os_timer_start();
 	}
+
+	zero_os_bitmap_free(&bitmap);
 	return 0;
 }

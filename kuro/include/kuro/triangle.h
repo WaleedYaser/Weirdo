@@ -17,7 +17,7 @@ kuro_triangle_raster(const kuro_triangle_t &self, zero_os_bitmap_t *bitmap)
 	vec2_t t_max = vec2_max(vec2_max(self.p1, self.p2), self.p3);
 
 	t_min = vec2_max(t_min, vec2_t{0, 0});
-	t_max = vec2_min(t_max, vec2_t{bitmap->width - 1.0f, bitmap->height - 1.0f});
+	t_max = vec2_min(t_max, vec2_t{(float)bitmap->width, (float)bitmap->height});
 
 	float a = cross(self.p2 - self.p1, self.p3 - self.p2);
 
@@ -35,7 +35,7 @@ kuro_triangle_raster(const kuro_triangle_t &self, zero_os_bitmap_t *bitmap)
 
 			if (t1 >= 0 && t2 >= 0 && t3 >= 0)
 			{
-				zero_os_bitmap_pixel_blend(bitmap, i, j, t1 * self.c1 + t2 * self.c2 + t3 * self.c3);
+				zero_os_bitmap_pixel_set(bitmap, i, j, t1 * self.c1 + t2 * self.c2 + t3 * self.c3);
 			}
 		}
 	}

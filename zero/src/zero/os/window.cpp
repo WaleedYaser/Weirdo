@@ -34,7 +34,7 @@ _zero_os_window_class(void)
 }
 
 zero_os_window_t
-zero_os_window_create(void)
+zero_os_window_create(uint32_t width, uint32_t height)
 {
 	WNDCLASSEX wcx = _zero_os_window_class();
 	HWND hwnd = CreateWindowEx(
@@ -42,7 +42,7 @@ zero_os_window_create(void)
 		wcx.lpszClassName,
 		"zero",
 		WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+		CW_USEDEFAULT, CW_USEDEFAULT, width, height,
 		0,
 		0,
 		wcx.hInstance,

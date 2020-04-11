@@ -37,6 +37,9 @@ zero_os_bitmap_pixel_get(zero_os_bitmap_t *self, int x, int y)
 inline static void
 zero_os_bitmap_pixel_set(zero_os_bitmap_t *self, int x, int y, zero_color_t color)
 {
+	if (x < 0 || y < 0 || x >= self->width || y >= self->height)
+		return;
+
 	self->data[x + y * self->width] =
 		((uint8_t)color.a) << 24 |
 		((uint8_t)color.r) << 16 |
@@ -62,7 +65,7 @@ zero_os_bitmap_fill_rect(zero_os_bitmap_t *self, int x, int y, int width, int he
 {
 	for (int j = y; j < y + height; ++j)
 		for (int i = x; i < x + width; ++i)
-			zero_os_bitmap_pixel_blend(self, i, j, color);
+			zero_os_bitmap_pixel_set(self, i, j, color);
 }
 
 inline static void
@@ -77,7 +80,7 @@ zero_os_bitmap_fill_circle(zero_os_bitmap_t *self, int center_x, int center_y, i
 			float dist_y = j + 0.5f - center_y;
 			float distance = dist_x * dist_x + dist_y * dist_y;
 			if (distance <= radius_squared)
-				zero_os_bitmap_pixel_blend(self, i, j, color);
+				zero_os_bitmap_pixel_set(self, i, j, color);
 		}
 	}
 }

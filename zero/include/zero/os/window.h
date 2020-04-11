@@ -12,7 +12,7 @@ struct zero_os_window_t
 };
 
 ZERO_API zero_os_window_t
-zero_os_window_create(void);
+zero_os_window_create(uint32_t width = CW_USEDEFAULT, uint32_t height = CW_USEDEFAULT);
 
 ZERO_API void
 zero_os_window_destroy(zero_os_window_t self);
