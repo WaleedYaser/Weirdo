@@ -13,7 +13,7 @@ zero_os_bitmap_new(int width, int height)
 
 	self.bmi.bmiHeader.biSize		 = sizeof(BITMAPINFOHEADER);
 	self.bmi.bmiHeader.biWidth		 = width;
-	self.bmi.bmiHeader.biHeight		 = height;
+	self.bmi.bmiHeader.biHeight		 = -height; // the sign is negative to create top-down image
 	self.bmi.bmiHeader.biPlanes		 = 1;
 	self.bmi.bmiHeader.biBitCount	 = 32;
 	self.bmi.bmiHeader.biCompression = BI_RGB;
