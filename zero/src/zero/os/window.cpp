@@ -82,75 +82,50 @@ zero_os_window_message(zero_os_window_t self, zero_window_msg_t *window_msg)
 				break;
 			case WM_SYSKEYUP:
 			case WM_KEYUP:
-			{
-				switch (msg.wParam)
-				{
-					case 'W':
-						window_msg->input.key_w.up = true;
-						window_msg->input.key_w.is_down = false;
-						break;
-					case 'S':
-						window_msg->input.key_s.up = true;
-						window_msg->input.key_s.is_down = false;
-						break;
-					case 'A':
-						window_msg->input.key_a.up = true;
-						window_msg->input.key_a.is_down = false;
-						break;
-					case 'D':
-						window_msg->input.key_d.up = true;
-						window_msg->input.key_d.is_down = false;
-						break;
-					case VK_SPACE:
-						window_msg->input.key_space.up = true;
-						window_msg->input.key_space.is_down = false;
-						break;
-					case VK_ESCAPE:
-						window_msg->input.key_escape.up = true;
-						window_msg->input.key_escape.is_down = false;
-						break;
-				}
-			} break;
-
 			case WM_SYSKEYDOWN:
 			case WM_KEYDOWN:
 			{
-				switch (msg.wParam)
+				bool was_down = msg.lParam & (1 << 30);
+				bool is_down  = (msg.lParam & (1 << 31)) == 0;
+
+				if (was_down != is_down)
 				{
-					case 'W':
-						window_msg->input.key_w.count++;
-						window_msg->input.key_w.down = true;
-						window_msg->input.key_w.is_down = true;
-						break;
-					case 'S':
-						window_msg->input.key_s.count++;
-						window_msg->input.key_s.down = true;
-						window_msg->input.key_s.is_down = true;
-						break;
-					case 'A':
-						window_msg->input.key_a.count++;
-						window_msg->input.key_a.down = true;
-						window_msg->input.key_a.is_down = true;
-						break;
-					case 'D':
-						window_msg->input.key_d.count++;
-						window_msg->input.key_d.down = true;
-						window_msg->input.key_d.is_down = true;
-						break;
-					case VK_SPACE:
-						window_msg->input.key_space.count++;
-						window_msg->input.key_space.down = true;
-						window_msg->input.key_space.is_down = true;
-						break;
-					case VK_ESCAPE:
-						window_msg->input.key_escape.count++;
-						window_msg->input.key_escape.down = true;
-						window_msg->input.key_escape.is_down = true;
-						break;
+					switch (msg.wParam)
+					{
+						case 'W':
+							window_msg->input.key_w.up = was_down;
+							window_msg->input.key_w.down = is_down;
+							window_msg->input.key_w.is_down = is_down;
+							break;
+						case 'S':
+							window_msg->input.key_s.up = was_down;
+							window_msg->input.key_s.down = is_down;
+							window_msg->input.key_s.is_down = is_down;
+							break;
+						case 'A':
+							window_msg->input.key_a.up = was_down;
+							window_msg->input.key_a.down = is_down;
+							window_msg->input.key_a.is_down = is_down;
+							break;
+						case 'D':
+							window_msg->input.key_d.up = was_down;
+							window_msg->input.key_d.down = is_down;
+							window_msg->input.key_d.is_down = is_down;
+							break;
+						case VK_SPACE:
+							window_msg->input.key_space.up = was_down;
+							window_msg->input.key_space.down = is_down;
+							window_msg->input.key_space.is_down = is_down;
+							break;
+						case VK_ESCAPE:
+							window_msg->input.key_escape.up = was_down;
+							window_msg->input.key_escape.down = is_down;
+							window_msg->input.key_escape.is_down = is_down;
+							break;
+					}
 				}
 			} break;
 		}
-
 		DispatchMessage(&msg);
 	}
 

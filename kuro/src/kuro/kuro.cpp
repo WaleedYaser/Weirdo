@@ -17,7 +17,10 @@ kuro_frame(zero_os_bitmap_t *bitmap, zero_window_msg_t *msg, float dt)
 	kuro_cam2d_t cam = kuro_cam2d_new(32, 16);
 	kuro_cam2d_fit(cam, bitmap->width, bitmap->height);
 
-	static vec2_t player_pos = vec2_t{0, 0};
+	static float vy = 0.0f;
+	float fy = 0.0f;
+
+	static vec2_t player_pos = vec2_t{0, 4};
 	vec2_t player_dir = {0};
 	float player_vel = 5.0f;
 
@@ -25,17 +28,22 @@ kuro_frame(zero_os_bitmap_t *bitmap, zero_window_msg_t *msg, float dt)
 		player_dir.x += 1.0f;
 	if (msg->input.key_a.is_down)
 		player_dir.x -= 1.0f;
-	if (msg->input.key_w.is_down)
-		player_dir.y += 1.0f;
-	if (msg->input.key_s.is_down)
-		player_dir.y -= 1.0f;
+	if (msg->input.key_w.down)
+		fy = 20000.0f;
 
-	vec2_t new_pos = player_pos + dt * player_vel * player_dir;
+	fy -= 80.0f * 9.81f;
+	float dy = vy * dt;
+	float ay = fy / 50.0f;
+	vy += ay * dt;
 
-	if (kuro_tile_map_point_valid(vec2_t{new_pos.x - 0.5f, player_pos.y}) &&
-		kuro_tile_map_point_valid(vec2_t{new_pos.x + 0.5f, player_pos.y}) &&
-		kuro_tile_map_point_valid(vec2_t{new_pos.x - 0.5f, player_pos.y + 1.4f}) &&
-		kuro_tile_map_point_valid(vec2_t{new_pos.x + 0.5f, player_pos.y + 1.4f}))
+	vec2_t new_pos;
+	new_pos.x = player_pos.x + dt * player_vel * player_dir.x;
+	new_pos.y = player_pos.y + dy;
+
+	if (kuro_tile_map_point_valid(vec2_t{new_pos.x - 0.5f, player_pos.y + 0.1f}) &&
+		kuro_tile_map_point_valid(vec2_t{new_pos.x + 0.5f, player_pos.y + 0.1f}) &&
+		kuro_tile_map_point_valid(vec2_t{new_pos.x - 0.5f, player_pos.y + 1.3f}) &&
+		kuro_tile_map_point_valid(vec2_t{new_pos.x + 0.5f, player_pos.y + 1.3f}))
 	{
 		player_pos.x = new_pos.x;
 	}
@@ -45,7 +53,11 @@ kuro_frame(zero_os_bitmap_t *bitmap, zero_window_msg_t *msg, float dt)
 		kuro_tile_map_point_valid(vec2_t{player_pos.x + 0.5f, new_pos.y}) &&
 		kuro_tile_map_point_valid(vec2_t{player_pos.x + 0.5f, new_pos.y + 1.4f}))
 	{
-		player_pos.y = new_pos.y;
+		player_pos.y = new_pos.y;	
+	}
+	else
+	{
+		vy = 0.0f;
 	}
 
 	kuro_aa_rect_t player_rect = kuro_aa_rect_t{
