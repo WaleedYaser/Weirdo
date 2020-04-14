@@ -30,11 +30,27 @@ kuro_frame(zero_os_bitmap_t *bitmap, zero_window_msg_t *msg, float dt)
 	if (msg->input.key_s.is_down)
 		player_dir.y -= 1.0f;
 
-	player_pos += dt * player_vel * player_dir;
+	vec2_t new_pos = player_pos + dt * player_vel * player_dir;
+
+	if (kuro_tile_map_point_valid(vec2_t{new_pos.x - 0.5f, player_pos.y}) &&
+		kuro_tile_map_point_valid(vec2_t{new_pos.x + 0.5f, player_pos.y}) &&
+		kuro_tile_map_point_valid(vec2_t{new_pos.x - 0.5f, player_pos.y + 1.4f}) &&
+		kuro_tile_map_point_valid(vec2_t{new_pos.x + 0.5f, player_pos.y + 1.4f}))
+	{
+		player_pos.x = new_pos.x;
+	}
+
+	if (kuro_tile_map_point_valid(vec2_t{player_pos.x - 0.5f, new_pos.y}) &&
+		kuro_tile_map_point_valid(vec2_t{player_pos.x - 0.5f, new_pos.y + 1.4f}) &&
+		kuro_tile_map_point_valid(vec2_t{player_pos.x + 0.5f, new_pos.y}) &&
+		kuro_tile_map_point_valid(vec2_t{player_pos.x + 0.5f, new_pos.y + 1.4f}))
+	{
+		player_pos.y = new_pos.y;
+	}
 
 	kuro_aa_rect_t player_rect = kuro_aa_rect_t{
 		player_pos - vec2_t{0.5f, 0.0f},
-		player_pos + vec2_t{0.5f, 1.0f},
+		player_pos + vec2_t{0.5f, 1.4f},
 		c_lime};
 
 	for (int j = 0; j < tile_map_count_y; ++j)

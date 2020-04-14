@@ -53,11 +53,13 @@ kuro_tile_map_rect(int i, int j)
 	return tile_rect;
 }
 
-struct kuro_tile_map_t
+inline static bool
+kuro_tile_map_point_valid(vec2_t p)
 {
-	uint32_t *data;
-	uint32_t count_x;
-	uint32_t count_y;
-	float    width;
-	float    height;
-};
+	int x = (int)(p.x + tile_map_count_x / 2.0f);
+	int y = (int)(tile_map_count_y / 2.0f - p.y);
+
+	if (tile_map[y][x] == 0)
+		return true;
+	return false;
+}
