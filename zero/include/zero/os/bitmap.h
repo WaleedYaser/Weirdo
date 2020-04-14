@@ -61,10 +61,13 @@ zero_os_bitmap_pixel_blend(zero_os_bitmap_t *self, int x, int y, zero_color_t co
 }
 
 inline static void
-zero_os_bitmap_fill_rect(zero_os_bitmap_t *self, int x, int y, int width, int height, zero_color_t color)
+zero_os_bitmap_fill_rect(
+	zero_os_bitmap_t *self,
+	float tl_x, float tl_y, float br_x, float br_y,
+	zero_color_t color)
 {
-	for (int j = y; j < y + height; ++j)
-		for (int i = x; i < x + width; ++i)
+	for (int j = (int)tl_y; j < (int)br_y; ++j)
+		for (int i = (int)tl_x; i < (int)br_x; ++i)
 			zero_os_bitmap_pixel_set(self, i, j, color);
 }
 
