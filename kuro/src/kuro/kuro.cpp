@@ -3,21 +3,72 @@
 #include "kuro/aa_rect.h"
 #include "kuro/tile_map.h"
 
-static zero_color_t c_teal  = zero_color_t{43, 151, 136, 255};
-static zero_color_t c_lime  	= zero_color_t{205, 220, 71, 255};
+static zero_color_t c_teal = zero_color_t{43, 151, 136, 255};
+static zero_color_t c_lime = zero_color_t{205, 220, 71, 255};
+
+static bool init = false;
+
+static float noise[540][960];
+static float noise_offset = 0.0f;
+
+static vec2_t player_pos = vec2_t{0, 4};
+static float vy = 0.0f;
+
+inline static void
+kuro_post_proc(zero_os_bitmap_t *bitmap)
+{
+	for (int j = 0; j < bitmap->height; ++j)
+	{
+		for (int i = 0; i < bitmap->width; ++i)
+		{
+			int x_noise = (int)((float) i / bitmap->width * 960);
+			int y_noise = (int)((float) j / bitmap->height * 540);
+
+			int x_offset = 2 * j;
+			int y_offset = (int)(noise_offset + 0.5f) % 540;
+
+			zero_color_t color = zero_os_bitmap_pixel_get(bitmap, i, j);
+
+			float n = 0.5f * (1.0f - noise[y_noise][x_noise]);
+
+			float n_diagonal = noise[y_offset][(x_noise + x_offset) % 960];
+			if (n_diagonal > 0.9f)
+				color = n_diagonal * color;
+
+			color = color + n * color;
+			zero_os_bitmap_pixel_set(bitmap, i, j, color);
+		}
+	}
+}
+
+inline static void
+kuro_init()
+{
+	if (init)
+		return;
+
+	for (int j = 0; j < 540; ++j)
+	{
+		for (int i = 0; i < 960; ++i)
+		{
+			noise[j][i] = ((float)rand() / RAND_MAX) * 0.3f + 0.7f;
+		}
+	}
+	init = true;
+}
 
 void
 kuro_frame(zero_os_bitmap_t *bitmap, zero_window_msg_t *msg, float dt)
 {
+	kuro_init();
+
 	zero_os_bitmap_fill(bitmap, c_black);
 
 	kuro_cam2d_t cam = kuro_cam2d_new(32, 16);
 	kuro_cam2d_fit(cam, bitmap->width, bitmap->height);
 
-	static float vy = 0.0f;
 	float fy = 0.0f;
 
-	static vec2_t player_pos = vec2_t{0, 4};
 	vec2_t player_dir = {0};
 	float player_vel = 5.0f;
 
@@ -62,18 +113,18 @@ kuro_frame(zero_os_bitmap_t *bitmap, zero_window_msg_t *msg, float dt)
 		player_pos + vec2_t{0.5f, 1.4f},
 		c_lime};
 
-	static float seed = 0.0f;
 
 	for (int j = 0; j < tile_map_count_y; ++j)
 	{
 		for (int i = 0; i < tile_map_count_x; ++i)
 		{
 			kuro_aa_rect_t tile_rect = kuro_tile_map_rect(i, j);
-			kuro_aa_rect_raster(tile_rect, cam, bitmap, (uint32_t)seed);
+			kuro_aa_rect_raster(tile_rect, cam, bitmap);
 		}
 	}
 
-	kuro_aa_rect_raster(player_rect, cam, bitmap, (uint32_t)(seed + 1));
+	kuro_aa_rect_raster(player_rect, cam, bitmap);
+	kuro_post_proc(bitmap);
 
-	seed += dt * 5;
+	noise_offset += dt * 5;
 }

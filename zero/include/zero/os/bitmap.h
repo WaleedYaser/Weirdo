@@ -37,9 +37,6 @@ zero_os_bitmap_pixel_get(zero_os_bitmap_t *self, int x, int y)
 inline static void
 zero_os_bitmap_pixel_set(zero_os_bitmap_t *self, int x, int y, zero_color_t color)
 {
-	if (x < 0 || y < 0 || x >= self->width || y >= self->height)
-		return;
-
 	self->data[x + y * self->width] =
 		((uint8_t)color.a) << 24 |
 		((uint8_t)color.r) << 16 |
