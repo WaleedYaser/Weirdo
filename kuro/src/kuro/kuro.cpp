@@ -9,10 +9,60 @@ static zero_color_t c_lime = zero_color_t{205, 220, 71, 255};
 static bool init = false;
 
 static float noise[540][960];
+static float edge[540][960];
 static float noise_offset = 0.0f;
 
 static vec2_t player_pos = vec2_t{0, 4};
 static float vy = 0.0f;
+
+inline static void
+kuro_post_edge(zero_os_bitmap_t *bitmap)
+{
+	for (int j = 1; j + 1 < bitmap->height; ++j)
+	{
+		for (int i = 1; i + 1 < bitmap->width; ++i)
+		{
+			uint32_t c_tl = bitmap->data[i - 1 + (j - 1) * bitmap->width];
+			uint32_t c_t = bitmap->data[i + (j - 1) * bitmap->width];
+			uint32_t c_tr = bitmap->data[i + 1 + (j - 1) * bitmap->width];
+
+			uint32_t c_cl = bitmap->data[i - 1 + j * bitmap->width];
+			uint32_t c_c = bitmap->data[i + j * bitmap->width];
+			uint32_t c_cr = bitmap->data[i + 1 + j * bitmap->width];
+
+			uint32_t c_bl = bitmap->data[i - 1 + (j + 1) * bitmap->width];
+			uint32_t c_b = bitmap->data[i + (j + 1) * bitmap->width];
+			uint32_t c_br = bitmap->data[i + 1 + (j + 1) * bitmap->width];
+
+			float e = 0.0f;
+			if (c_tl == c_t && c_t == c_tr && c_tr == c_cl &&
+				c_cl == c_c && c_c == c_cr && c_cr == c_bl &&
+				c_bl == c_b && c_b == c_br)
+			{
+			}
+			else
+			{
+				e = 1.0f;
+			}
+			int x_edge = (int)((float) i / bitmap->width * 960);
+			int y_edge = (int)((float) j / bitmap->height * 540);
+			edge[y_edge][x_edge] = e;
+		}
+	}
+
+	for (int j = 0; j < bitmap->height; ++j)
+	{
+		for (int i = 0; i < bitmap->width; ++i)
+		{
+			int x_edge = (int)((float) i / bitmap->width * 960);
+			int y_edge = (int)((float) j / bitmap->height * 540);
+			float e = edge[y_edge][x_edge];
+
+			uint32_t color = (uint32_t)(bitmap->data[i + j * bitmap->width] * e);
+			bitmap->data[i + j * bitmap->width] = color;
+		}
+	}
+}
 
 inline static void
 kuro_post_proc(zero_os_bitmap_t *bitmap)
@@ -30,7 +80,6 @@ kuro_post_proc(zero_os_bitmap_t *bitmap)
 			zero_color_t color = zero_os_bitmap_pixel_get(bitmap, i, j);
 
 			float n = 0.5f * (1.0f - noise[y_noise][x_noise]);
-
 			float n_diagonal = noise[y_offset][(x_noise + x_offset) % 960];
 			if (n_diagonal > 0.9f)
 				color = n_diagonal * color;
@@ -124,7 +173,9 @@ kuro_frame(zero_os_bitmap_t *bitmap, zero_window_msg_t *msg, float dt)
 	}
 
 	kuro_aa_rect_raster(player_rect, cam, bitmap);
-	kuro_post_proc(bitmap);
+	zero_os_bitmap_fill_circle(bitmap, 200, 200, 100, c_teal);
+	kuro_post_edge(bitmap);
+	// kuro_post_proc(bitmap);
 
 	noise_offset += dt * 5;
 }
