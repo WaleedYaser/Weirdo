@@ -150,7 +150,7 @@ kuro_frame(zero_os_bitmap_t *bitmap, zero_window_msg_t *msg, float dt)
 		kuro_tile_map_point_valid(vec2_t{player_pos.x + 0.5f, new_pos.y}) &&
 		kuro_tile_map_point_valid(vec2_t{player_pos.x + 0.5f, new_pos.y + 1.4f}))
 	{
-		player_pos.y = new_pos.y;	
+		player_pos.y = new_pos.y;
 	}
 	else
 	{
@@ -173,8 +173,8 @@ kuro_frame(zero_os_bitmap_t *bitmap, zero_window_msg_t *msg, float dt)
 	}
 
 	kuro_aa_rect_raster(player_rect, cam, bitmap);
-	zero_os_bitmap_fill_circle(bitmap, 200, 200, 100, c_teal);
-	kuro_post_edge(bitmap);
+	// zero_os_bitmap_fill_circle(bitmap, 200, 200, 100, c_teal);
+	// kuro_post_edge(bitmap);
 	// kuro_post_proc(bitmap);
 
 	noise_offset += dt * 5;
